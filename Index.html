@@ -1,119 +1,89 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Itinerario Canvas</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.9.3/confetti.browser.min.js"></script>
   <style>
     :root {
       --bg: #f6f8ff;
-      --bg-elev: rgba(255,255,255,0.72);
-      --surface: rgba(255,255,255,0.9);
-      --surface-2: #ffffff;
-      --surface-3: #eef4ff;
-      --border: rgba(118, 133, 170, 0.2);
-      --text: #17192b;
-      --muted: #6f7991;
+      --surface: rgba(255,255,255,0.88);
+      --surface-strong: #ffffff;
+      --border: rgba(115,126,160,0.18);
+      --text: #171b2b;
+      --muted: #6d7690;
       --accent: #7867f5;
       --accent-2: #527bff;
       --accent-3: #54d8e8;
-      --success: #67d9ae;
-      --warning: #ffbf69;
-      --danger: #ff758b;
-      --shadow: 0 18px 40px rgba(37, 52, 94, 0.12);
-      --shadow-soft: 0 12px 28px rgba(37, 52, 94, 0.08);
+      --success: #5ecb9d;
+      --warning: #ffbd69;
+      --danger: #ff7d8f;
+      --shadow: 0 18px 40px rgba(38,52,88,0.10);
+      --shadow-soft: 0 12px 28px rgba(38,52,88,0.06);
       --radius: 22px;
-      --nav-h: 82px;
-      --chrome: rgba(255,255,255,0.65);
-      --dot: #dfe8ff;
-      --hero: linear-gradient(135deg, rgba(120,103,245,0.16), rgba(84,216,232,0.10), rgba(243,138,185,0.12));
+      --nav-h: 84px;
+      --hero: linear-gradient(135deg, rgba(120,103,245,0.18), rgba(84,216,232,0.12), rgba(243,138,185,0.10));
+      color-scheme: light;
     }
 
     :root[data-theme="dark"] {
       --bg: #0d1220;
-      --bg-elev: rgba(19, 24, 35, 0.7);
-      --surface: rgba(17, 22, 33, 0.9);
-      --surface-2: #151d2e;
-      --surface-3: #1b2437;
-      --border: rgba(150, 166, 198, 0.18);
+      --surface: rgba(21,27,38,0.86);
+      --surface-strong: #171f2d;
+      --border: rgba(155,168,195,0.16);
       --text: #edf3ff;
-      --muted: #a9b5d1;
-      --accent: #8c90ff;
-      --accent-2: #6aa2ff;
-      --accent-3: #6fe4ff;
-      --success: #81f0bc;
-      --warning: #ffcc7c;
-      --danger: #ff92a5;
-      --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
-      --shadow-soft: 0 12px 28px rgba(0, 0, 0, 0.22);
-      --chrome: rgba(19, 25, 37, 0.7);
-      --dot: rgba(255,255,255,0.06);
-      --hero: linear-gradient(135deg, rgba(120,103,245,0.16), rgba(76, 108, 255, 0.18), rgba(243,138,185,0.12));
+      --muted: #aab8d1;
+      --accent: #8e95ff;
+      --accent-2: #6da7ff;
+      --accent-3: #6fe5ff;
+      --success: #82f0ba;
+      --warning: #ffc57b;
+      --danger: #ff9ba8;
+      --shadow: 0 18px 40px rgba(0,0,0,0.35);
+      --shadow-soft: 0 12px 28px rgba(0,0,0,0.22);
+      --hero: linear-gradient(135deg, rgba(120,103,245,0.20), rgba(84,216,232,0.10), rgba(243,138,185,0.12));
+      color-scheme: dark;
     }
 
     * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(120,103,245,0.18), transparent 28rem),
-        radial-gradient(circle at bottom right, rgba(84,216,232,0.14), transparent 26rem),
-        var(--bg);
-      color: var(--text);
-      min-height: 100%;
-      overflow-x: hidden;
-    }
-
+    html, body { margin: 0; }
     body {
       min-height: 100vh;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(120,103,245,0.14), transparent 28rem),
+        radial-gradient(circle at bottom right, rgba(84,216,232,0.12), transparent 24rem),
+        var(--bg);
+      color: var(--text);
       letter-spacing: -0.02em;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
 
-    button, input, select, textarea {
-      font: inherit;
-      color: inherit;
-    }
-
+    button, input, select, textarea { font: inherit; color: inherit; }
     button {
       border: 1px solid var(--border);
-      background: var(--surface-2);
+      background: var(--surface-strong);
       color: var(--text);
-      border-radius: 14px;
       min-height: 42px;
-      padding: 0 12px;
+      border-radius: 14px;
       cursor: pointer;
-      transition: transform 0.2s ease, opacity 0.2s ease, border 0.2s ease, box-shadow 0.2s ease;
+      padding: 0 12px;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
       box-shadow: 0 1px 2px rgba(0,0,0,0.04);
     }
-
-    button:hover { transform: translateY(-1px); }
-    button:active { transform: translateY(1px) scale(0.985); }
-    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    button:hover { border-color: rgba(120,103,245,0.35); }
+    button:active { transform: scale(.97); }
     button.primary {
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
       border-color: transparent;
       color: white;
-      box-shadow: 0 10px 24px rgba(120,103,245,0.28);
+      box-shadow: 0 10px 22px rgba(120,103,245,0.20);
     }
+    button:disabled { opacity: .5; cursor: not-allowed; }
 
-    a { color: inherit; text-decoration: none; }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0,0,0,0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    .safe-pad { padding-bottom: calc(var(--nav-h) + 28px); }
-
+    .safe-pad { padding-bottom: calc(var(--nav-h) + 20px); }
     .page {
       max-width: 760px;
       margin: 0 auto;
@@ -124,227 +94,197 @@
       position: sticky;
       top: 0;
       z-index: 30;
-      backdrop-filter: blur(22px);
-      -webkit-backdrop-filter: blur(22px);
-      background: color-mix(in srgb, var(--bg) 76%, transparent);
+      background: color-mix(in srgb, var(--bg) 78%, transparent);
       border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
     }
-
     .topbar-inner {
       max-width: 760px;
       margin: 0 auto;
+      padding: 10px 12px 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 10px 12px 12px;
     }
-
     .brand {
       display: flex;
       align-items: center;
       gap: 10px;
       min-width: 0;
     }
-
     .brand-mark {
       width: 40px;
       height: 40px;
       border-radius: 14px;
       display: grid;
       place-items: center;
+      background: linear-gradient(135deg, rgba(120,103,245,0.14), rgba(84,216,232,0.18));
+      border: 1px solid rgba(120,103,245,0.16);
       font-size: 18px;
-      background: linear-gradient(135deg, rgba(118,103,245,0.16), rgba(84,216,232,0.18));
-      border: 1px solid rgba(120,103,245,0.18);
     }
-
     .brand h1 {
       margin: 0;
-      font-size: clamp(1rem, 2.8vw, 1.2rem);
-      letter-spacing: -0.04em;
+      font-size: clamp(1rem, 2.4vw, 1.22rem);
       font-weight: 800;
+      letter-spacing: -0.04em;
     }
-
     .toolbar {
       display: flex;
       align-items: center;
       gap: 8px;
     }
-
     .icon-btn {
       width: 40px;
       min-width: 40px;
       padding: 0;
-      display: inline-grid;
+      display: grid;
       place-items: center;
-      border-radius: 12px;
       background: transparent;
       border-color: transparent;
+      border-radius: 12px;
     }
-
-    .icon-btn:hover { background: rgba(255,255,255,0.08); }
-
     .search-wrap {
       display: flex;
       align-items: center;
       gap: 8px;
+      width: min(220px, 40vw);
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 14px;
       padding: 8px 10px;
-      width: min(220px, 42vw);
       box-shadow: var(--shadow-soft);
     }
-
     .search-wrap input {
       width: 100%;
-      background: transparent;
       border: 0;
-      color: var(--text);
-      font-size: 0.95rem;
       outline: none;
+      background: transparent;
+      color: var(--text);
+      font-size: .95rem;
     }
 
     .card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.00)), var(--surface);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00)), var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow-soft);
       padding: 16px;
-      position: relative;
       overflow: hidden;
     }
-
     .card.hero {
       background: var(--hero);
-      border: 1px solid rgba(120,103,245,0.12);
+      border-color: rgba(120,103,245,0.12);
       padding: 18px;
     }
-
     .hero .title-row {
       display: flex;
-      justify-content: space-between;
       align-items: flex-start;
+      justify-content: space-between;
       gap: 12px;
       margin-bottom: 8px;
     }
-
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
+      font-size: .72rem;
+      letter-spacing: .08em;
       text-transform: uppercase;
+      font-weight: 800;
       color: var(--muted);
-      font-weight: 700;
     }
-
     .hero h2 {
       margin: 8px 0 0;
       font-size: clamp(1.8rem, 4vw, 2.8rem);
       letter-spacing: -0.06em;
-      line-height: 1.05;
+      line-height: 1;
     }
-
-    .hero .meta {
-      margin-top: 12px;
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.18);
+      font-weight: 800;
+      font-size: .8rem;
+    }
+    .meta {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       gap: 10px;
       color: var(--muted);
-      font-size: 0.85rem;
+      font-size: .84rem;
+      margin-top: 8px;
     }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255,255,255,0.2);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 999px;
-      padding: 6px 10px;
-      font-weight: 700;
-      color: var(--text);
-    }
-
     .progress-wrap {
-      margin-top: 14px;
+      margin-top: 16px;
       display: grid;
       gap: 10px;
     }
-
     .progress-head {
       display: flex;
-      justify-content: space-between;
       align-items: baseline;
+      justify-content: space-between;
       gap: 12px;
-      font-size: 0.92rem;
+      font-size: .92rem;
       color: var(--muted);
     }
-
     .progress-bar {
       height: 11px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.34);
+      background: rgba(255,255,255,0.32);
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.10);
     }
-
     .progress-bar > span {
       display: block;
       height: 100%;
       width: 0;
-      background: linear-gradient(90deg, var(--accent), var(--accent-3));
       border-radius: inherit;
-      transition: width 0.35s ease;
+      background: linear-gradient(90deg, var(--accent), var(--accent-3));
+      transition: width .35s ease;
     }
-
     .mini-grid {
+      margin-top: 14px;
       display: grid;
       grid-template-columns: repeat(3, minmax(0,1fr));
       gap: 12px;
-      margin-top: 14px;
     }
-
     .stat {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
-      padding: 12px 10px;
-      min-height: 94px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      gap: 8px;
+      min-height: 90px;
+      gap: 6px;
+      padding: 12px 10px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.08);
     }
-
     .stat strong {
       font-size: 1.35rem;
       letter-spacing: -0.05em;
     }
-
     .subhead {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       gap: 12px;
       margin: 22px 0 10px;
     }
-
     .subhead h3 {
       margin: 0;
       font-size: 1.08rem;
       letter-spacing: -0.03em;
     }
-
     .link-btn {
       background: transparent;
       border: 0;
       padding: 0;
       color: var(--accent);
-      font-weight: 700;
+      font-weight: 800;
     }
 
     .week-strip {
@@ -353,200 +293,164 @@
       gap: 8px;
       margin-top: 10px;
     }
-
     .day-chip {
-      text-align: center;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      min-height: 84px;
-      padding: 8px 5px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       gap: 4px;
-      transition: all 0.2s ease;
+      min-height: 84px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      padding: 8px 5px;
+      text-align: center;
+      transition: transform .15s ease, background .15s ease;
     }
-
     .day-chip.active {
       background: linear-gradient(180deg, var(--accent), var(--accent-2));
       border-color: transparent;
       color: white;
-      box-shadow: 0 12px 24px rgba(120,103,245,0.2);
+      box-shadow: 0 12px 22px rgba(120,103,245,0.18);
     }
-
     .day-chip .label {
-      font-size: 0.72rem;
+      font-size: .72rem;
       text-transform: capitalize;
-      opacity: 0.8;
+      opacity: .85;
     }
-
     .day-chip .date {
-      font-size: 1.05rem;
+      font-size: 1.06rem;
       font-weight: 800;
       letter-spacing: -0.04em;
     }
-
     .dot-row {
       display: flex;
       justify-content: center;
       gap: 5px;
     }
-
     .dot {
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.75);
-      opacity: 0.8;
+      background: rgba(255,255,255,0.74);
     }
 
     .task-list { display: grid; gap: 10px; }
-
     .task-item {
       display: flex;
       align-items: center;
       gap: 10px;
-      background: rgba(255,255,255,0.02);
+      padding: 10px 12px;
       border: 1px solid var(--border);
       border-radius: 18px;
-      padding: 10px 12px;
-      transition: border 0.2s ease, transform 0.2s ease;
+      background: rgba(255,255,255,0.02);
     }
-
-    .task-item.done {
-      opacity: 0.7;
-    }
-
+    .task-item.done { opacity: .72; }
     .task-item.done .task-title { text-decoration: line-through; }
-
     .check {
-      width: 24px; height: 24px;
+      width: 24px;
+      height: 24px;
       min-width: 24px;
       border-radius: 50%;
-      border: 2px solid rgba(120,103,245,0.6);
-      background: transparent;
+      padding: 0;
+      border: 2px solid rgba(120,103,245,0.7);
       display: grid;
       place-items: center;
       color: white;
-      font-size: 0.8rem;
-      font-weight: 900;
+      font-size: .8rem;
+      font-weight: 800;
+      background: transparent;
     }
-
     .task-item.done .check {
       background: linear-gradient(135deg, var(--success), #5ccf9b);
       border-color: transparent;
     }
-
     .task-main {
       flex: 1;
       min-width: 0;
       display: grid;
-      gap: 4px;
+      gap: 5px;
     }
-
-    .task-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      min-width: 0;
-    }
-
     .task-title {
       display: block;
       font-weight: 700;
       letter-spacing: -0.03em;
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
     }
-
     .task-meta {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      font-size: 0.74rem;
+      font-size: .74rem;
       color: var(--muted);
-      line-height: 1.5;
     }
-
     .badge {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       border-radius: 999px;
       padding: 3px 8px;
-      font-size: 0.68rem;
+      font-size: .68rem;
       font-weight: 800;
-      letter-spacing: 0.02em;
       border: 1px solid transparent;
-      background: rgba(255,255,255,0.2);
+      line-height: 1.4;
     }
-
-    .badge.subject { background: rgba(120,103,245,0.08); color: var(--accent); }
-    .badge.priority.high { background: rgba(255,117,139,0.12); color: var(--danger); }
-    .badge.priority.medium { background: rgba(255,191,105,0.12); color: var(--warning); }
-    .badge.priority.low { background: rgba(103,217,174,0.12); color: var(--success); }
-
+    .badge.subject { background: rgba(120,103,245,.08); color: var(--accent); }
+    .badge.priority.high { background: rgba(255,125,143,.12); color: var(--danger); }
+    .badge.priority.medium { background: rgba(255,189,105,.12); color: var(--warning); }
+    .badge.priority.low { background: rgba(94,203,157,.12); color: var(--success); }
     .task-actions {
       display: flex;
-      align-items: center;
       gap: 6px;
+      align-items: center;
       flex-shrink: 0;
     }
-
-    .task-actions .mini {
+    .mini {
       width: 30px;
       min-width: 30px;
       height: 30px;
       min-height: 30px;
-      border-radius: 10px;
       padding: 0;
+      border-radius: 10px;
       background: rgba(255,255,255,0.04);
     }
 
     .project-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
       gap: 12px;
     }
-
     .project-card {
-      background: rgba(255,255,255,0.02);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 14px;
       display: grid;
       gap: 10px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.02);
     }
-
     .project-header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       gap: 10px;
     }
-
-    .project-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 0 20px rgba(120,103,245,0.4);
-    }
-
-    .project-card h4 {
+    .project-header h4 {
       margin: 0;
       font-size: 1rem;
       letter-spacing: -0.03em;
     }
-
+    .project-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(120,103,245,0.4);
+    }
     .project-card p {
       margin: 0;
       color: var(--muted);
-      font-size: 0.86rem;
       line-height: 1.5;
+      font-size: .86rem;
     }
 
     .note-grid {
@@ -554,55 +458,52 @@
       grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
       gap: 12px;
     }
-
     .note-card {
-      border-radius: 18px;
-      padding: 14px;
+      position: relative;
       min-height: 150px;
+      padding: 14px;
+      border-radius: 18px;
       border: 1px solid rgba(17,17,17,0.06);
       box-shadow: var(--shadow-soft);
       display: grid;
       align-content: start;
       gap: 8px;
-      position: relative;
       overflow: hidden;
     }
-
     .note-card::before {
       content: "";
       position: absolute;
       width: 120px;
-      height: 140px;
+      height: 120px;
       right: -26px;
       top: -18px;
       border-radius: 50%;
       background: rgba(255,255,255,0.22);
       filter: blur(12px);
     }
-
     .note-card h4 {
       margin: 0;
-      font-size: 0.92rem;
-      letter-spacing: -0.02em;
+      font-size: .92rem;
+      position: relative;
+      z-index: 1;
     }
-
     .note-card p {
       margin: 0;
-      color: rgba(23,25,43,0.82);
+      color: rgba(25,25,25,0.82);
+      font-size: .82rem;
       line-height: 1.45;
-      font-size: 0.82rem;
       position: relative;
       z-index: 1;
     }
 
     .empty-state {
-      background: rgba(255,255,255,0.04);
-      border: 1px dashed var(--border);
-      border-radius: 18px;
+      width: 100%;
       padding: 24px 18px;
-      text-align: center;
+      border-radius: 18px;
+      border: 1px dashed var(--border);
+      background: rgba(255,255,255,0.02);
       color: var(--muted);
-      margin-top: 8px;
+      text-align: center;
     }
 
     .nav {
@@ -610,13 +511,12 @@
       left: 0;
       right: 0;
       bottom: 0;
-      z-index: 50;
-      border-top: 1px solid var(--border);
       background: color-mix(in srgb, var(--bg) 82%, transparent);
-      backdrop-filter: blur(22px);
-      -webkit-backdrop-filter: blur(22px);
+      border-top: 1px solid var(--border);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      z-index: 50;
     }
-
     .nav-inner {
       max-width: 760px;
       margin: 0 auto;
@@ -625,121 +525,105 @@
       gap: 6px;
       padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
     }
-
     .nav-item {
-      border: 0;
       background: transparent;
-      color: var(--muted);
+      border: 0;
       min-height: 58px;
       border-radius: 14px;
-      padding: 7px 4px;
       display: grid;
       place-items: center;
-      gap: 4px;
-      font-size: 0.72rem;
+      gap: 3px;
+      color: var(--muted);
+      font-size: .72rem;
       font-weight: 700;
+      padding: 7px 4px;
     }
-
     .nav-item.active {
-      background: rgba(120,103,245,0.1);
+      background: rgba(120,103,245,0.10);
       color: var(--accent);
     }
 
     .fab {
       position: fixed;
       right: 18px;
-      bottom: calc(92px + env(safe-area-inset-bottom));
+      bottom: calc(94px + env(safe-area-inset-bottom));
       width: 60px;
       height: 60px;
+      min-height: 60px;
       border-radius: 18px;
+      border: 0;
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
       color: white;
-      border: 0;
       font-size: 2rem;
-      box-shadow: 0 18px 26px rgba(120,103,245,0.25);
+      box-shadow: 0 18px 28px rgba(120,103,245,0.26);
       z-index: 52;
     }
 
     .sheet-backdrop, .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(8, 10, 16, 0.36);
+      background: rgba(8,10,16,0.36);
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.22s ease;
+      transition: opacity .22s ease;
       z-index: 60;
     }
-
-    .sheet-backdrop.open, .modal-backdrop.open {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .sheet-backdrop.open, .modal-backdrop.open { opacity: 1; pointer-events: auto; }
 
     .sheet {
       position: fixed;
       left: 50%;
       bottom: 0;
-      transform: translate(-50%, 105%);
       width: min(760px, calc(100% - 18px));
+      max-height: 86vh;
+      transform: translate(-50%, 105%);
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 24px 24px 0 0;
-      box-shadow: var(--shadow);
-      transition: transform 0.25s ease;
-      z-index: 61;
-      max-height: 86vh;
       overflow: auto;
+      box-shadow: var(--shadow);
       padding: 16px 16px calc(18px + env(safe-area-inset-bottom));
+      transition: transform .25s ease;
+      z-index: 61;
     }
-
     .sheet.open { transform: translate(-50%, 0); }
-
     .sheet .grab {
       width: 52px;
       height: 5px;
-      border-radius: 999px;
       background: rgba(128,136,160,0.5);
+      border-radius: 999px;
       margin: 0 auto 12px;
     }
-
     .sheet h3 {
       margin: 0 0 10px;
       letter-spacing: -0.04em;
       font-size: 1.4rem;
     }
-
     .sheet-row {
       display: grid;
       gap: 12px;
       margin-top: 10px;
     }
-
     .field {
       display: grid;
       gap: 8px;
     }
-
     .field label {
       color: var(--muted);
-      font-size: 0.82rem;
+      font-size: .82rem;
       font-weight: 700;
     }
-
     .field input, .field select, .field textarea {
       width: 100%;
-      border-radius: 14px;
-      border: 1px solid var(--border);
       background: rgba(255,255,255,0.02);
-      padding: 10px 12px;
+      border: 1px solid var(--border);
       color: var(--text);
+      border-radius: 14px;
+      padding: 10px 12px;
       outline: none;
       resize: vertical;
     }
-
-    .field textarea {
-      min-height: 96px;
-    }
-
+    .field textarea { min-height: 96px; }
     .sheet-actions {
       display: flex;
       justify-content: flex-end;
@@ -751,7 +635,6 @@
       position: fixed;
       left: 50%;
       top: 50%;
-      transform: translate(-50%, -48%);
       width: min(440px, calc(100% - 20px));
       background: var(--surface);
       border: 1px solid var(--border);
@@ -760,45 +643,41 @@
       padding: 20px 18px;
       z-index: 65;
       opacity: 0;
+      transform: translate(-50%, -48%);
       pointer-events: none;
-      transition: opacity 0.2s ease, transform 0.2s ease;
+      transition: opacity .18s ease, transform .18s ease;
     }
-
     .modal.open {
       opacity: 1;
       pointer-events: auto;
       transform: translate(-50%, -50%);
     }
-
     .modal h4 {
       margin: 0 0 12px;
       font-size: 1.15rem;
       letter-spacing: -0.04em;
     }
-
     .modal p {
       margin: 0 0 16px;
       color: var(--muted);
       line-height: 1.5;
     }
-
     .menu-grid {
       display: grid;
       gap: 10px;
       margin-top: 12px;
     }
-
     .menu-btn {
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      width: 100%;
-      text-align: left;
       background: rgba(255,255,255,0.02);
       border: 1px solid var(--border);
       border-radius: 14px;
       padding: 12px 14px;
+      text-align: left;
     }
 
     .theme-grid {
@@ -807,35 +686,28 @@
       gap: 10px;
       margin-top: 10px;
     }
-
     .theme-card {
+      display: grid;
+      gap: 8px;
+      text-align: left;
       padding: 12px;
       border-radius: 16px;
       border: 1px solid var(--border);
       background: rgba(255,255,255,0.02);
-      text-align: left;
-      display: grid;
-      gap: 8px;
     }
-
     .theme-swatch {
+      display: flex;
       height: 26px;
       border-radius: 10px;
-      display: flex;
       overflow: hidden;
       border: 1px solid rgba(255,255,255,0.12);
     }
-
-    .theme-swatch span {
-      display: block;
-      flex: 1;
-    }
+    .theme-swatch span { flex: 1; display: block; }
 
     @media (min-width: 640px) {
       .page { padding-top: 24px; }
       .mini-grid { grid-template-columns: repeat(4, minmax(0,1fr)); }
     }
-
     @media (max-width: 420px) {
       .toolbar { gap: 6px; }
       .search-wrap { width: 150px; }
@@ -844,9 +716,12 @@
       .mini-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
       .fab { right: 14px; }
     }
-
     @media (prefers-reduced-motion: reduce) {
-      * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
 </head>
@@ -907,38 +782,30 @@
     function todayStr() {
       const d = new Date();
       const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
+      const m = String(d.getMonth()+1).padStart(2,'0');
+      const day = String(d.getDate()).padStart(2,'0');
       return `${y}-${m}-${day}`;
     }
-
     function addDays(dateStr, offset) {
       const d = new Date(dateStr + 'T12:00:00');
       d.setDate(d.getDate() + offset);
       const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
+      const m = String(d.getMonth()+1).padStart(2,'0');
+      const day = String(d.getDate()).padStart(2,'0');
       return `${y}-${m}-${day}`;
     }
-
-    function clamp(n, min, max) { return Math.min(Math.max(n, min), max); }
-
     function uid(prefix = 'id') {
-      return `${prefix}_${Math.random().toString(36).slice(2, 10)}_${Date.now().toString(36)}`;
+      return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2,8)}`;
     }
-
-    function safeText(value) {
+    function escapeHtml(value) {
       return String(value ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
     }
+    function clamp(n, min, max) { return Math.min(Math.max(n, min), max); }
 
     function currentState() {
-      const base = {
+      return {
         version: 1,
-        settings: {
-          theme: 'nebula',
-          mode: 'dark',
-          motion: 'balanced'
-        },
+        settings: { theme: 'nebula', mode: 'light', motion: 'balanced' },
         tasks: [
           { id: 't1', title: 'Ejercicios de fracciones', subject: 'mat', due: addDays(todayStr(), 1), xp: 10, priority: 'medium', done: false },
           { id: 't2', title: 'Resumen de literatura', subject: 'esp', due: addDays(todayStr(), 2), xp: 15, priority: 'high', done: false },
@@ -973,7 +840,6 @@
         ledger: [],
         ui: { tab: 'home', filter: 'all', selectedDay: todayStr(), weekOffset: 0, search: '' }
       };
-      return base;
     }
 
     function loadState() {
@@ -982,7 +848,19 @@
         if (!raw) return currentState();
         const saved = JSON.parse(raw);
         const base = currentState();
-        return { ...base, ...saved, settings: { ...base.settings, ...(saved.settings || {}) }, ui: { ...base.ui, ...(saved.ui || {}) }, tasks: Array.isArray(saved.tasks) ? saved.tasks : base.tasks, projects: Array.isArray(saved.projects) ? saved.projects : base.projects, notes: Array.isArray(saved.notes) ? saved.notes : base.notes, events: Array.isArray(saved.events) ? saved.events : base.events, subjects: Array.isArray(saved.subjects) ? saved.subjects : base.subjects, inventory: Array.isArray(saved.inventory) ? saved.inventory : base.inventory, ledger: Array.isArray(saved.ledger) ? saved.ledger : base.ledger };
+        return {
+          ...base,
+          ...saved,
+          settings: { ...base.settings, ...(saved.settings || {}) },
+          ui: { ...base.ui, ...(saved.ui || {}) },
+          tasks: Array.isArray(saved.tasks) ? saved.tasks : base.tasks,
+          projects: Array.isArray(saved.projects) ? saved.projects : base.projects,
+          notes: Array.isArray(saved.notes) ? saved.notes : base.notes,
+          events: Array.isArray(saved.events) ? saved.events : base.events,
+          subjects: Array.isArray(saved.subjects) ? saved.subjects : base.subjects,
+          inventory: Array.isArray(saved.inventory) ? saved.inventory : base.inventory,
+          ledger: Array.isArray(saved.ledger) ? saved.ledger : base.ledger
+        };
       } catch (error) {
         console.warn('Storage failed to parse, resetting demo dataset.', error);
         return currentState();
@@ -990,39 +868,37 @@
     }
 
     let state = loadState();
-
     function saveState() {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      } catch (error) {
-        console.warn('Cannot save state.', error);
-      }
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+      catch (error) { console.warn('Cannot save state.', error); }
     }
-
-    function getSubject(name) {
-      return state.subjects.find(s => s.id === name) || { id: name, name: 'Sin materia', color: '#7d8498' };
+    function getSubject(subjectId) {
+      return state.subjects.find(s => s.id === subjectId) || { id: subjectId, name: 'Sin materia', color: '#7d8498' };
     }
-
     function getThemeConfig() {
       const theme = THEMES[state.settings.theme] || THEMES.nebula;
-      const isDark = state.settings.mode === 'dark' || theme.dark;
-      document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
-      const set = isDark ? theme : { ...theme, bg: theme.bg, surface: theme.surface };
-      document.documentElement.style.setProperty('--bg', set.bg);
-      document.documentElement.style.setProperty('--surface', set.surface);
-      document.documentElement.style.setProperty('--text', set.text);
-      document.documentElement.style.setProperty('--accent', set.accent);
-      document.documentElement.style.setProperty('--accent-2', set.accent2);
-      document.documentElement.style.setProperty('--accent-3', set.accent3);
-      document.documentElement.style.setProperty('--success', set.success);
-      document.documentElement.style.setProperty('--warning', set.warning);
-      document.documentElement.style.setProperty('--danger', set.danger);
-      document.documentElement.style.setProperty('--hero', `linear-gradient(135deg, ${set.accent}22, ${set.accent2}22, ${set.accent3}15)`);
-      return set;
+      const dark = state.settings.mode === 'dark' || theme.dark;
+      document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      document.documentElement.style.setProperty('--bg', theme.bg);
+      document.documentElement.style.setProperty('--surface', theme.surface);
+      document.documentElement.style.setProperty('--text', theme.text);
+      document.documentElement.style.setProperty('--accent', theme.accent);
+      document.documentElement.style.setProperty('--accent-2', theme.accent2);
+      document.documentElement.style.setProperty('--accent-3', theme.accent3);
+      document.documentElement.style.setProperty('--success', theme.success);
+      document.documentElement.style.setProperty('--warning', theme.warning);
+      document.documentElement.style.setProperty('--danger', theme.danger);
+      document.documentElement.style.setProperty('--hero', `linear-gradient(135deg, ${theme.accent}22, ${theme.accent2}22, ${theme.accent3}15)`);
+      return theme;
     }
-
+    function formatDate(dateStr) {
+      if (!dateStr) return 'Sin fecha';
+      const date = new Date(`${dateStr}T12:00:00`);
+      return date.toLocaleDateString('es-MX', { weekday: 'short', day: 'numeric', month: 'short' });
+    }
     function weekDates() {
-      const today = new Date(`${state.ui.selectedDay || todayStr()}T12:00:00`);
+      const selected = state.ui.selectedDay || todayStr();
+      const today = new Date(`${selected}T12:00:00`);
       const day = (today.getDay() + 6) % 7;
       const monday = new Date(today);
       monday.setDate(today.getDate() - day + state.ui.weekOffset * 7);
@@ -1030,22 +906,15 @@
         const d = new Date(monday);
         d.setDate(monday.getDate() + i);
         const y = d.getFullYear();
-        const m = String(d.getMonth() + 1).padStart(2, '0');
-        const dayNum = String(d.getDate()).padStart(2, '0');
+        const m = String(d.getMonth()+1).padStart(2,'0');
+        const dayNum = String(d.getDate()).padStart(2,'0');
         return `${y}-${m}-${dayNum}`;
       });
     }
-
     function priorityClass(priority) {
       if (priority === 'high') return 'high';
       if (priority === 'medium') return 'medium';
       return 'low';
-    }
-
-    function formatDate(dateStr) {
-      if (!dateStr) return 'Sin fecha';
-      const date = new Date(`${dateStr}T12:00:00`);
-      return date.toLocaleDateString('es-MX', { weekday: 'short', day: 'numeric', month: 'short' });
     }
 
     function renderHero() {
@@ -1059,7 +928,7 @@
           <div class="title-row">
             <div>
               <div class="eyebrow">${greeting}</div>
-              <h2>${safeText(state.pet?.name || 'Estudiante')}</h2>
+              <h2>${escapeHtml(state.pet?.name || 'Estudiante')}</h2>
             </div>
             <div class="pill">⚡ Nivel ${state.pet?.level || 1}</div>
           </div>
@@ -1069,10 +938,7 @@
             <span>${state.xp || 0} XP acumulados</span>
           </div>
           <div class="progress-wrap">
-            <div class="progress-head">
-              <span>Progreso de hoy</span>
-              <strong>${percent}%</strong>
-            </div>
+            <div class="progress-head"><span>Progreso del día</span><strong>${percent}%</strong></div>
             <div class="progress-bar"><span style="width:${percent}%"></span></div>
           </div>
           <div class="mini-grid">
@@ -1083,7 +949,6 @@
         </section>
       `;
     }
-
     function renderWeekStrip() {
       const dates = weekDates();
       const selected = state.ui.selectedDay || todayStr();
@@ -1096,7 +961,7 @@
             const active = date === selected ? 'active' : '';
             return `
               <button class="day-chip ${active}" data-action="select-day" data-day="${date}">
-                <span class="label">${safeText(label)}</span>
+                <span class="label">${escapeHtml(label)}</span>
                 <span class="date">${d.getDate()}</span>
                 <span class="dot-row">${Array.from({ length: clamp(cellTasks, 0, 3) }, () => '<span class="dot"></span>').join('')}</span>
               </button>
@@ -1105,7 +970,6 @@
         </div>
       `;
     }
-
     function renderTaskItem(task) {
       const subject = getSubject(task.subject);
       const due = task.due ? formatDate(task.due) : 'Sin fecha';
@@ -1113,13 +977,11 @@
         <div class="task-item ${task.done ? 'done' : ''}" data-task-id="${task.id}">
           <button class="check" data-action="toggle-task" data-id="${task.id}" aria-label="Marcar tarea como ${task.done ? 'pendiente' : 'completa'}">${task.done ? '✓' : ''}</button>
           <div class="task-main">
-            <div class="task-row">
-              <span class="task-title">${safeText(task.title)}</span>
-            </div>
+            <div class="task-title">${escapeHtml(task.title)}</div>
             <div class="task-meta">
-              <span class="badge subject" style="background:${subject.color}22;color:${subject.color};border-color:${subject.color}35;">${safeText(subject.name)}</span>
+              <span class="badge subject" style="background:${subject.color}22;color:${subject.color};border-color:${subject.color}35;">${escapeHtml(subject.name)}</span>
               <span class="badge priority ${priorityClass(task.priority)}">${task.priority === 'high' ? 'Alta' : task.priority === 'medium' ? 'Media' : 'Baja'}</span>
-              <span>${safeText(due)}</span>
+              <span>${escapeHtml(due)}</span>
               <span>+${task.xp} XP</span>
             </div>
           </div>
@@ -1130,7 +992,6 @@
         </div>
       `;
     }
-
     function renderTasks() {
       const filter = state.ui.filter || 'all';
       let tasks = [...state.tasks];
@@ -1142,7 +1003,6 @@
         tasks = tasks.filter(t => `${t.title} ${getSubject(t.subject).name}`.toLowerCase().includes(q));
       }
       tasks = tasks.sort((a,b) => (a.done === b.done ? 0 : a.done ? 1 : -1) || (a.due || '9999-12-31').localeCompare(b.due || '9999-12-31'));
-
       return `
         <section class="card">
           <div class="subhead">
@@ -1155,7 +1015,6 @@
         </section>
       `;
     }
-
     function renderProjects() {
       return `
         <section class="card">
@@ -1167,22 +1026,24 @@
             ${state.projects.length ? state.projects.map(p => `
               <div class="project-card">
                 <div class="project-header">
-                  <div style="display:flex;align-items:center;gap:8px;"><span class="project-dot" style="background:${getSubject(p.subject).color};box-shadow:0 0 20px ${getSubject(p.subject).color}75;"></span><h4>${safeText(p.name)}</h4></div>
-                  <span class="badge" style="background:${getSubject(p.subject).color}18;color:${getSubject(p.subject).color};">${safeText(getSubject(p.subject).name)}</span>
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <span class="project-dot" style="background:${getSubject(p.subject).color};"></span>
+                    <h4>${escapeHtml(p.name)}</h4>
+                  </div>
+                  <span class="badge" style="background:${getSubject(p.subject).color}18;color:${getSubject(p.subject).color};">${escapeHtml(getSubject(p.subject).name)}</span>
                 </div>
-                <p>${safeText(p.description || 'Sin descripción')}</p>
+                <p>${escapeHtml(p.description || 'Sin descripción')}</p>
                 <div class="progress-wrap" style="margin-top:0;">
                   <div class="progress-head"><span>Avance</span><strong>${p.progress || 0}%</strong></div>
                   <div class="progress-bar"><span style="width:${p.progress || 0}%"></span></div>
                 </div>
-                <div class="task-meta"><span>Fecha límite: ${safeText(formatDate(p.due))}</span></div>
+                <div class="task-meta"><span>Fecha límite: ${escapeHtml(formatDate(p.due))}</span></div>
               </div>
-            `).join('') : '<div class="empty-state" style="width:100%;grid-column:1/-1;">Aún no hay proyectos. Crea uno para seguir tu trabajo.</div>'}
+            `).join('') : '<div class="empty-state" style="grid-column:1/-1;">Aún no hay proyectos. Crea uno para seguir tu trabajo.</div>'}
           </div>
         </section>
       `;
     }
-
     function renderNotes() {
       return `
         <section class="card">
@@ -1193,15 +1054,14 @@
           <div class="note-grid">
             ${state.notes.length ? state.notes.map(note => `
               <article class="note-card" style="background:${note.color || '#fff3a8'};">
-                <h4>${safeText(note.title || 'Nota')}</h4>
-                <p>${safeText(note.text || 'Escribe tu idea aquí...')}</p>
+                <h4>${escapeHtml(note.title || 'Nota')}</h4>
+                <p>${escapeHtml(note.text || 'Escribe tu idea aquí...')}</p>
               </article>
-            `).join('') : '<div class="empty-state" style="width:100%;grid-column:1/-1;">Guarda ideas libremente para convertirlas luego en tareas o proyectos.</div>'}
+            `).join('') : '<div class="empty-state" style="grid-column:1/-1;">Guarda ideas libremente para convertirlas luego en tareas o proyectos.</div>'}
           </div>
         </section>
       `;
     }
-
     function renderProfile() {
       const totalXp = state.xp || 0;
       const completed = state.tasks.filter(t => t.done).length;
@@ -1211,7 +1071,7 @@
           <div class="title-row">
             <div>
               <div class="eyebrow">Perfil</div>
-              <h2>${safeText(state.pet?.name || 'Mr. Miaus')}</h2>
+              <h2>${escapeHtml(state.pet?.name || 'Mr. Miaus')}</h2>
             </div>
             <div class="pill">🧠 ${state.pet?.level || 1}</div>
           </div>
@@ -1224,16 +1084,15 @@
             <div class="stat"><span>Completadas</span><strong>${completed}</strong><small>Metas</small></div>
             <div class="stat"><span>Vencidas</span><strong>${overdue}</strong><small>Revisa</small></div>
             <div class="stat"><span>Logros</span><strong>${state.inventory.length}</strong><small>Recompensas</small></div>
-            <div class="stat"><span>Temas</span><strong>8</strong><small>Personalización</small></div>
+            <div class="stat"><span>Temas</span><strong>${Object.keys(THEMES).length}</strong><small>Personalización</small></div>
           </div>
         </section>
-
         <section class="card">
           <div class="subhead"><h3>Temas</h3></div>
           <div class="theme-grid">
             ${Object.entries(THEMES).map(([key, theme]) => `
               <button class="theme-card" data-action="set-theme" data-theme="${key}">
-                <div class="theme-swatch" title="${theme.name}">
+                <div class="theme-swatch">
                   <span style="background:${theme.accent};"></span>
                   <span style="background:${theme.accent2};"></span>
                   <span style="background:${theme.accent3};"></span>
@@ -1246,14 +1105,19 @@
         </section>
       `;
     }
-
     function renderContent() {
       const tab = state.ui.tab || 'home';
       if (tab === 'home') {
         app.innerHTML = `
           ${renderHero()}
           <section class="card" style="margin-top:14px;">
-            <div class="subhead"><h3>Semana</h3><button class="link-btn" data-action="week-back">◀</button><button class="link-btn" data-action="week-forward">▶</button></div>
+            <div class="subhead">
+              <h3>Semana</h3>
+              <div style="display:flex;gap:10px;">
+                <button class="link-btn" data-action="week-back">◀</button>
+                <button class="link-btn" data-action="week-forward">▶</button>
+              </div>
+            </div>
             ${renderWeekStrip()}
           </section>
           ${renderTasks()}
@@ -1280,11 +1144,10 @@
         app.innerHTML = renderProfile();
       }
 
-      document.getElementById('searchInput').value = state.ui.search || '';
+      searchInput.value = state.ui.search || '';
       setNav();
       getThemeConfig();
     }
-
     function setNav() {
       const tabs = [
         { id: 'home', label: 'Inicio', icon: '⌂' },
@@ -1300,94 +1163,83 @@
         </button>
       `).join('');
     }
-
     function openSheet(title, bodyHtml, options = {}) {
       sheet.innerHTML = `
         <div class="grab"></div>
-        <h3>${safeText(title)}</h3>
+        <h3>${escapeHtml(title)}</h3>
         <div class="sheet-row">${bodyHtml}</div>
         <div class="sheet-actions">
           <button data-action="close-sheet">Cancelar</button>
-          <button class="primary" data-action="save-sheet" data-sheet="${options.sheet || 'generic'}">Guardar</button>
+          <button class="primary" data-action="save-sheet" data-sheet="${options.sheet || 'generic'}" data-task-id="${options.taskId || ''}" data-project-id="${options.projectId || ''}">Guardar</button>
         </div>
       `;
       sheet.classList.add('open');
       sheetBackdrop.classList.add('open');
     }
-
     function closeSheet() {
       sheet.classList.remove('open');
       sheetBackdrop.classList.remove('open');
       sheet.innerHTML = '';
     }
-
     function openModal(title, message, actions = []) {
       modal.innerHTML = `
-        <h4>${safeText(title)}</h4>
-        <p>${safeText(message)}</p>
+        <h4>${escapeHtml(title)}</h4>
+        <p>${escapeHtml(message)}</p>
         <div class="sheet-actions" style="justify-content:flex-end;">
-          ${actions.map(action => `<button class="${action.primary ? 'primary' : ''}" data-action="${action.name}">${safeText(action.label)}</button>`).join('')}
+          ${actions.map(action => `<button class="${action.primary ? 'primary' : ''}" data-action="${action.name}" data-id="${action.id || ''}">${escapeHtml(action.label)}</button>`).join('')}
         </div>
       `;
       modal.classList.add('open');
       modalBackdrop.classList.add('open');
     }
-
     function closeModal() {
       modal.classList.remove('open');
       modalBackdrop.classList.remove('open');
       modal.innerHTML = '';
     }
-
     function openTaskForm(taskId) {
       const task = state.tasks.find(t => t.id === taskId) || { title: '', subject: 'mat', due: todayStr(), xp: 10, priority: 'medium', done: false };
       openSheet(task.id ? 'Editar tarea' : 'Nueva tarea', `
-        <div class="field"><label>Título</label><input id="task-title" value="${safeText(task.title)}" /></div>
-        <div class="field"><label>Materia</label><select id="task-subject">${state.subjects.map(s => `<option value="${s.id}" ${s.id === task.subject ? 'selected' : ''}>${safeText(s.name)}</option>`).join('')}</select></div>
+        <div class="field"><label>Título</label><input id="task-title" value="${escapeHtml(task.title)}" /></div>
+        <div class="field"><label>Materia</label><select id="task-subject">${state.subjects.map(s => `<option value="${s.id}" ${s.id === task.subject ? 'selected' : ''}>${escapeHtml(s.name)}</option>`).join('')}</select></div>
         <div class="field"><label>Fecha límite</label><input id="task-due" type="date" value="${task.due || todayStr()}" /></div>
         <div class="field"><label>Prioridad</label><select id="task-priority"><option value="high" ${task.priority === 'high' ? 'selected' : ''}>Alta</option><option value="medium" ${task.priority === 'medium' ? 'selected' : ''}>Media</option><option value="low" ${task.priority === 'low' ? 'selected' : ''}>Baja</option></select></div>
         <div class="field"><label>XP</label><input id="task-xp" type="number" min="1" max="100" value="${task.xp || 10}" /></div>
       `, { sheet: 'task', taskId: task.id || null });
     }
-
     function openProjectForm(projectId) {
       const project = state.projects.find(p => p.id === projectId) || { name: '', subject: 'mat', description: '', due: addDays(todayStr(), 7), progress: 0 };
       openSheet(project.id ? 'Editar proyecto' : 'Nuevo proyecto', `
-        <div class="field"><label>Nombre</label><input id="project-name" value="${safeText(project.name)}" /></div>
-        <div class="field"><label>Materia</label><select id="project-subject">${state.subjects.map(s => `<option value="${s.id}" ${s.id === project.subject ? 'selected' : ''}>${safeText(s.name)}</option>`).join('')}</select></div>
+        <div class="field"><label>Nombre</label><input id="project-name" value="${escapeHtml(project.name)}" /></div>
+        <div class="field"><label>Materia</label><select id="project-subject">${state.subjects.map(s => `<option value="${s.id}" ${s.id === project.subject ? 'selected' : ''}>${escapeHtml(s.name)}</option>`).join('')}</select></div>
         <div class="field"><label>Fecha límite</label><input id="project-due" type="date" value="${project.due || addDays(todayStr(), 7)}" /></div>
-        <div class="field"><label>Descripción</label><textarea id="project-description">${safeText(project.description || '')}</textarea></div>
+        <div class="field"><label>Descripción</label><textarea id="project-description">${escapeHtml(project.description || '')}</textarea></div>
         <div class="field"><label>Progreso</label><input id="project-progress" type="range" min="0" max="100" value="${project.progress || 0}" /></div>
       `, { sheet: 'project', projectId: project.id || null });
     }
-
     function openNoteForm() {
-      const note = { title:'', text:'', color:'#fff3a8' };
       openSheet('Nueva nota', `
-        <div class="field"><label>Título</label><input id="note-title" value="${safeText(note.title)}" /></div>
-        <div class="field"><label>Contenido</label><textarea id="note-text">${safeText(note.text)}</textarea></div>
-        <div class="field"><label>Color</label><input id="note-color" type="color" value="${note.color}" /></div>
+        <div class="field"><label>Título</label><input id="note-title" value="" /></div>
+        <div class="field"><label>Contenido</label><textarea id="note-text"></textarea></div>
+        <div class="field"><label>Color</label><input id="note-color" type="color" value="#fff3a8" /></div>
       `, { sheet: 'note' });
     }
-
     function saveTaskFromSheet() {
-      const id = sheet.querySelector('[data-sheet="task"]').dataset.taskId || uid('task');
-      const task = state.tasks.find(t => t.id === id) || { id, done: false };
+      const taskId = sheet.querySelector('[data-sheet="task"]')?.dataset.taskId || uid('task');
+      const task = state.tasks.find(t => t.id === taskId) || { id: taskId, done: false };
       task.title = document.getElementById('task-title').value.trim();
       task.subject = document.getElementById('task-subject').value;
       task.due = document.getElementById('task-due').value || todayStr();
       task.priority = document.getElementById('task-priority').value;
       task.xp = Number(document.getElementById('task-xp').value) || 10;
-      if (!task.id) task.id = uid('task');
       if (!state.tasks.some(t => t.id === task.id)) state.tasks.push(task);
       saveState();
       renderContent();
       closeSheet();
     }
-
     function saveProjectFromSheet() {
-      const id = sheet.querySelector('[data-sheet="project"]').dataset.projectId || uid('project');
-      const project = state.projects.find(p => p.id === id) || { id };
+      const projectId = sheet.querySelector('[data-sheet="project"]')?.dataset.projectId || uid('project');
+      const project = state.projects.find(p => p.id === projectId) || { id: projectId };
       project.name = document.getElementById('project-name').value.trim();
       project.subject = document.getElementById('project-subject').value;
       project.due = document.getElementById('project-due').value || addDays(todayStr(), 7);
@@ -1398,7 +1250,6 @@
       renderContent();
       closeSheet();
     }
-
     function saveNoteFromSheet() {
       const note = {
         id: uid('note'),
@@ -1407,50 +1258,25 @@
         color: document.getElementById('note-color').value || '#fff3a8',
         created: Date.now()
       };
-      state.notes.push(note); saveState(); renderContent(); closeSheet();
+      state.notes.push(note);
+      saveState();
+      renderContent();
+      closeSheet();
     }
-
     function deleteTask(id) {
-      openModal('Eliminar tarea', '¿Deseas quitar esta tarea? Tus datos guardados se mantienen.', [
+      openModal('Eliminar tarea', '¿Deseas quitar esta tarea? La acción no borra el historial de XP ya obtenido.', [
         { label: 'Cancelar', name: 'close-modal', primary: false },
-        { label: 'Eliminar', name: 'confirm-delete-task', primary: true, data: id }
+        { label: 'Eliminar', name: 'confirm-delete-task', primary: true, id }
       ]);
     }
-
-    function handleAction(actionName, extra) {
+    function handleAction(actionName, target) {
       if (actionName === 'switch-tab') {
-        state.ui.tab = extra.dataset.tab;
-        saveState();
-        renderContent();
-      }
-      if (actionName === 'open-task-form') openTaskForm();
-      if (actionName === 'edit-task') openTaskForm(extra.dataset.id);
-      if (actionName === 'delete-task') deleteTask(extra.dataset.id);
-      if (actionName === 'toggle-task') {
-        const task = state.tasks.find(t => t.id === extra.dataset.id);
-        if (!task) return;
-        task.done = !task.done;
-        state.xp += task.done ? task.xp : -task.xp;
-        state.streak = Math.max(0, state.streak + (task.done ? 1 : -1));
-        saveState();
-        renderContent();
-      }
-      if (actionName === 'save-sheet') {
-        const type = sheet.querySelector('[data-sheet]')?.dataset.sheet;
-        if (type === 'task') saveTaskFromSheet();
-        if (type === 'project') saveProjectFromSheet();
-        if (type === 'note') saveNoteFromSheet();
-      }
-      if (actionName === 'close-sheet') closeSheet();
-      if (actionName === 'close-modal') closeModal();
-      if (actionName === 'confirm-delete-task') {
-        state.tasks = state.tasks.filter(t => t.id !== extra.dataset?.id);
-        closeModal();
+        state.ui.tab = target.dataset.tab;
         saveState();
         renderContent();
       }
       if (actionName === 'select-day') {
-        state.ui.selectedDay = extra.dataset.day;
+        state.ui.selectedDay = target.dataset.day;
         saveState();
         renderContent();
       }
@@ -1462,27 +1288,37 @@
         state.ui.weekOffset += 1;
         renderContent();
       }
+      if (actionName === 'open-task-form') openTaskForm();
+      if (actionName === 'edit-task') openTaskForm(target.dataset.id);
+      if (actionName === 'delete-task') deleteTask(target.dataset.id);
+      if (actionName === 'toggle-task') {
+        const task = state.tasks.find(t => t.id === target.dataset.id);
+        if (!task) return;
+        task.done = !task.done;
+        state.xp += task.done ? task.xp : -task.xp;
+        state.streak = Math.max(0, state.streak + (task.done ? 1 : -1));
+        saveState();
+        renderContent();
+      }
       if (actionName === 'open-project-form') openProjectForm();
       if (actionName === 'open-note-form') openNoteForm();
+      if (actionName === 'close-sheet') closeSheet();
+      if (actionName === 'close-modal') closeModal();
+      if (actionName === 'confirm-delete-task') {
+        state.tasks = state.tasks.filter(t => t.id !== target.dataset.id);
+        closeModal();
+        saveState();
+        renderContent();
+      }
+      if (actionName === 'save-sheet') {
+        const type = sheet.querySelector('[data-sheet]')?.dataset.sheet;
+        if (type === 'task') saveTaskFromSheet();
+        if (type === 'project') saveProjectFromSheet();
+        if (type === 'note') saveNoteFromSheet();
+      }
       if (actionName === 'set-theme') {
-        state.settings.theme = extra.dataset.theme;
-        const config = THEMES[extra.dataset.theme];
-        state.settings.mode = config.dark ? 'dark' : 'light';
-        saveState();
-        renderContent();
-      }
-      if (actionName === 'theme-toggle') {
-        const themes = Object.keys(THEMES);
-        const currentIndex = themes.indexOf(state.settings.theme);
-        const next = themes[(currentIndex + 1) % themes.length];
-        state.settings.theme = next;
-        state.settings.mode = THEMES[next].dark ? 'dark' : 'light';
-        saveState();
-        renderContent();
-      }
-      if (actionName === 'clear-search') { state.ui.search = ''; renderContent(); }
-      if (actionName === 'reset-demo') {
-        state = currentState();
+        state.settings.theme = target.dataset.theme;
+        state.settings.mode = THEMES[target.dataset.theme].dark ? 'dark' : 'light';
         saveState();
         renderContent();
       }
@@ -1491,15 +1327,21 @@
     document.body.addEventListener('click', (event) => {
       const target = event.target.closest('[data-action]');
       if (!target) return;
-      const action = target.dataset.action;
-      handleAction(action, target);
+      handleAction(target.dataset.action, target);
     });
-
     searchInput.addEventListener('input', (event) => {
       state.ui.search = event.target.value;
       renderContent();
     });
-
+    themeToggleBtn.addEventListener('click', () => {
+      const keys = Object.keys(THEMES);
+      const currentIndex = keys.indexOf(state.settings.theme);
+      const next = keys[(currentIndex + 1) % keys.length];
+      state.settings.theme = next;
+      state.settings.mode = THEMES[next].dark ? 'dark' : 'light';
+      saveState();
+      renderContent();
+    });
     fab.addEventListener('click', () => {
       openSheet('Crear rápido', `
         <div class="menu-grid">
@@ -1509,17 +1351,8 @@
         </div>
       `, { sheet: 'menu' });
     });
-
-    themeToggleBtn.addEventListener('click', () => {
-      const themes = Object.keys(THEMES);
-      const current = themes.indexOf(state.settings.theme);
-      const next = themes[(current + 1) % themes.length];
-      state.settings.theme = next;
-      state.settings.mode = THEMES[next].dark ? 'dark' : 'light';
-      saveState();
-      renderContent();
-    });
-
+    sheetBackdrop.addEventListener('click', closeSheet);
+    modalBackdrop.addEventListener('click', closeModal);
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
         if (sheet.classList.contains('open')) closeSheet();
@@ -1527,15 +1360,11 @@
       }
     });
 
-    sheetBackdrop.addEventListener('click', closeSheet);
-    modalBackdrop.addEventListener('click', closeModal);
-
     function init() {
       getThemeConfig();
       renderContent();
       saveState();
     }
-
     init();
   </script>
 </body>
